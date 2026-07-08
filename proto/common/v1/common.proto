@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package common.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// option go_package is managed by buf.gen.yaml managed mode.
+// Do not set it here manually to avoid conflicts.
+
+// BaseResponse is the standard response wrapper for all RPC calls.
+// It carries HTTP status, a human-readable message, and optional validation errors.
+message BaseResponse {
+  // http_status_code mirrors the HTTP status code (e.g. 200, 400, 404, 500).
+  int32 http_status_code = 1;
+
+  // is_success indicates whether the operation completed successfully.
+  bool is_success = 2;
+
+  // message is a human-readable description of the result.
+  string message = 3;
+
+  // validation_errors contains field-level validation error details,
+  // populated when http_status_code is 400.
+  repeated ValidationError validation_errors = 4;
+}
+
+// ValidationError describes a single field-level validation failure.
+message ValidationError {
+  // field is the name of the request field that failed validation.
+  string field = 1;
+
+  // message describes why the field failed validation.
+  string message = 2;
+}
+
+// PaginationRequest carries cursor-based pagination parameters.
+message PaginationRequest {
+  // page is the 1-indexed page number to fetch (minimum: 1).
+  int32 page = 1;
+
+  // page_size is the maximum number of items per page (maximum: 100).
+  int32 page_size = 2;
+}
+
+// PaginationResponse carries pagination metadata in list responses.
+message PaginationResponse {
+  // current_page is the page number returned in this response.
+  int32 current_page = 1;
+
+  // page_size is the number of items requested per page.
+  int32 page_size = 2;
+
+  // total_items is the total number of items across all pages.
+  int64 total_items = 3;
+
+  // total_pages is the total number of pages available.
+  int32 total_pages = 4;
+}
+
+// AuditInfo carries standard audit timestamps and actor information.
+message AuditInfo {
+  // created_at is the RFC 3339 timestamp when the resource was created.
+  google.protobuf.Timestamp created_at = 1;
+
+  // created_by is the identifier of the user or system that created the resource.
+  string created_by = 2;
+
+  // updated_at is the RFC 3339 timestamp when the resource was last updated.
+  google.protobuf.Timestamp updated_at = 3;
+
+  // updated_by is the identifier of the user or system that last updated the resource.
+  string updated_by = 4;
+}
