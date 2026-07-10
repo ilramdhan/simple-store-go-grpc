@@ -43,7 +43,7 @@ tidy:
 	go mod tidy
 	cd $(PRODUCT_SVC_DIR) && go mod tidy
 
-## lint: Run golangci-lint (install: https://golangci-lint.run/usage/install/)
+## lint: Run golangci-lint
 lint:
 	golangci-lint run ./$(PRODUCT_SVC_DIR)/...
 
@@ -52,6 +52,19 @@ lint:
 ## clean: Remove all generated proto artifacts
 clean:
 	rm -rf $(PROTO_GEN_DIR)
+
+# ─── Make Migrations ──────────────────────────────────────────────────────────
+
+## migration: Generate skeleton file migrasi baru (make migration svc=user-service name=create_users)
+migration:
+	@if [ -z "$(svc)" ] || [ -z "$(name)" ]; then \
+		echo "\033[31m[ERROR] Parameter 'svc' (service) dan 'name' wajib diisi!\033[0m"; \
+		echo "Cara penggunaan : make migration svc=<nama-service> name=<nama-tabel>"; \
+		echo "Contoh          : make migration svc=product-service name=create_products"; \
+		exit 1; \
+	fi
+	@echo "\033[32mMembuat file migrasi '$(name)' untuk service '$(svc)'...\033[0m"
+	migrate create -ext sql -dir services/$(svc)/internal/repository/postgres/migrations -format "20060102150405" $(name)
 
 # ─── Help ─────────────────────────────────────────────────────────────────────
 
