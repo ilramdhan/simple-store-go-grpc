@@ -1,0 +1,28 @@
+app:
+  env: "development"
+  name: "product-service"
+
+server:
+  grpc_port: 50051
+  http_port: 8080
+  # Timeout dalam format string, koanf akan otomatis mengubahnya ke time.Duration Golang
+  read_timeout: "5s"
+  write_timeout: "10s"
+  graceful_timeout: "15s"
+
+database:
+  # Kita set default ke localhost untuk mempermudah local development
+  host: "localhost"
+  port: 5432
+  # Karena config.go menggunakan rule validate:"required,uri",
+  # kita wajib menaruh format URI yang valid di sini, meskipun ini hanya dummy untuk lokal.
+  url: "postgres://postgres:secret@localhost:5432/simple_store?sslmode=disable"
+
+  max_conns: 20
+  min_conns: 5
+  # Cegah "zombie connection" yang memakan RAM
+  max_idle_time: "10m"
+  max_lifetime: "1h"
+
+log:
+  level: "debug" # Ubah ke 'info' atau 'warn' saat di production env
