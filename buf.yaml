@@ -1,7 +1,7 @@
 version: v2
 modules:
   - path: proto
-    name: buf.build/ilramdhan/simple-store-go-grpc
+    name: buf.build/ilramadhan/simple-store-go-grpc
 deps:
 #  - buf.build/googleapis/googleapis
   - buf.build/protocolbuffers/wellknowntypes
