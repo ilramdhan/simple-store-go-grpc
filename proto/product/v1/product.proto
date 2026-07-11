@@ -4,144 +4,74 @@ package product.v1;
 
 import "common/v1/common.proto";
 import "google/api/annotations.proto";
-import "google/protobuf/field_mask.proto";
 
-// option go_package is managed by buf.gen.yaml managed mode.
-// Do not set it here manually to avoid conflicts.
+option go_package = "github.com/ilramdhan/simple-store-go-grpc/gen/go/product/v1;productv1";
 
-// Product represents a single product entity in the catalog.
 message Product {
-  // id is the unique identifier of the product (UUID v4).
   string id = 1;
-
-  // name is the display name of the product.
   string name = 2;
-
-  // description is the long-form description of the product.
   string description = 3;
-
-  // price_cents is the product price in the smallest currency unit (e.g. cents for USD).
-  // Using integer avoids floating-point precision issues with monetary values.
-  // Example: 1999 = $19.99 USD
   int64 price_cents = 4;
-
-  // stock is the current available quantity in inventory.
   int32 stock = 5;
-
-  // audit contains creation and modification metadata.
   common.v1.AuditInfo audit = 6;
 }
 
-// ─── Create ───────────────────────────────────────────────────────────────────
-
-// CreateProductRequest carries the data needed to create a new product.
 message CreateProductRequest {
-  // name is the display name of the product (required, max 255 chars).
   string name = 1;
-
-  // description is the long-form description (optional, max 2000 chars).
   string description = 2;
-
-  // price_cents is the price in the smallest currency unit (required, min 0).
   int64 price_cents = 3;
-
-  // stock is the initial inventory quantity (required, min 0).
   int32 stock = 4;
 }
 
-// CreateProductResponse returns the newly created product.
 message CreateProductResponse {
-  // base contains the operation status and any error details.
   common.v1.BaseResponse base = 1;
-
-  // product is the newly created product.
   Product product = 2;
 }
 
-// ─── Get ──────────────────────────────────────────────────────────────────────
-
-// GetProductRequest identifies the product to retrieve.
 message GetProductRequest {
-  // id is the unique identifier of the product to retrieve (UUID v4).
   string id = 1;
 }
 
-// GetProductResponse returns the requested product.
 message GetProductResponse {
-  // base contains the operation status and any error details.
   common.v1.BaseResponse base = 1;
-
-  // product is the requested product.
   Product product = 2;
 }
 
-// ─── Update ───────────────────────────────────────────────────────────────────
-
-// UpdateProductRequest carries partial update data for an existing product.
-// Only fields specified in update_mask will be modified.
 message UpdateProductRequest {
-  // id is the unique identifier of the product to update (required).
   string id = 1;
-
-  // update_mask specifies which fields of `product` to update.
-  // If update_mask is empty, all fields in `product` will be updated.
-  // Field paths: "name", "description", "price_cents", "stock"
-  google.protobuf.FieldMask update_mask = 2;
-
-  // product contains the new field values. Only fields listed in
-  // update_mask are applied. Other fields are ignored.
-  Product product = 3;
+  optional string name = 2;
+  optional string description = 3;
+  optional int64 price_cents = 4;
+  optional int32 stock = 5;
 }
 
-// UpdateProductResponse returns the product after the update.
 message UpdateProductResponse {
-  // base contains the operation status and any error details.
   common.v1.BaseResponse base = 1;
-
-  // product is the product after the update has been applied.
   Product product = 2;
 }
 
-// ─── Delete ───────────────────────────────────────────────────────────────────
-
-// DeleteProductRequest identifies the product to delete.
 message DeleteProductRequest {
-  // id is the unique identifier of the product to delete (UUID v4).
   string id = 1;
 }
 
-// DeleteProductResponse confirms the deletion.
 message DeleteProductResponse {
-  // base contains the operation status and any error details.
   common.v1.BaseResponse base = 1;
 }
 
-// ─── List ─────────────────────────────────────────────────────────────────────
-
-// ListProductsRequest carries pagination parameters for listing products.
 message ListProductsRequest {
-  // pagination controls the page and page size.
-  common.v1.PaginationRequest pagination = 1;
+  int32 page = 1;
+  int32 page_size = 2;
+  string search_name = 3;
+  optional int64 min_price = 4;
 }
 
-// ListProductsResponse returns a paginated list of products.
 message ListProductsResponse {
-  // base contains the operation status and any error details.
   common.v1.BaseResponse base = 1;
-
-  // products is the list of products on the current page.
   repeated Product products = 2;
-
-  // pagination contains metadata about the total result set.
   common.v1.PaginationResponse pagination = 3;
 }
 
-// ─── Service ──────────────────────────────────────────────────────────────────
-
-// ProductService exposes CRUD operations for the product catalog.
-// All endpoints follow REST conventions via gRPC-Gateway HTTP transcoding.
 service ProductService {
-  // CreateProduct creates a new product in the catalog.
   rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse) {
     option (google.api.http) = {
       post: "/v1/products"
@@ -149,15 +79,12 @@ service ProductService {
     };
   }
 
-  // GetProduct retrieves a single product by its unique identifier.
   rpc GetProduct(GetProductRequest) returns (GetProductResponse) {
     option (google.api.http) = {
       get: "/v1/products/{id}"
     };
   }
 
-  // UpdateProduct partially updates an existing product using FieldMask semantics.
-  // Only fields listed in update_mask are modified.
   rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse) {
     option (google.api.http) = {
       patch: "/v1/products/{id}"
@@ -165,14 +92,12 @@ service ProductService {
     };
   }
 
-  // DeleteProduct removes a product from the catalog permanently.
   rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse) {
     option (google.api.http) = {
       delete: "/v1/products/{id}"
     };
   }
 
-  // ListProducts returns a paginated list of all products.
   rpc ListProducts(ListProductsRequest) returns (ListProductsResponse) {
     option (google.api.http) = {
       get: "/v1/products"

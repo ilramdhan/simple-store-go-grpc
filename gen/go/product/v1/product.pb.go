@@ -11,7 +11,6 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -24,23 +23,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Product represents a single product entity in the catalog.
 type Product struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// id is the unique identifier of the product (UUID v4).
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// name is the display name of the product.
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// description is the long-form description of the product.
-	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// price_cents is the product price in the smallest currency unit (e.g. cents for USD).
-	// Using integer avoids floating-point precision issues with monetary values.
-	// Example: 1999 = $19.99 USD
-	PriceCents int64 `protobuf:"varint,4,opt,name=price_cents,json=priceCents,proto3" json:"price_cents,omitempty"`
-	// stock is the current available quantity in inventory.
-	Stock int32 `protobuf:"varint,5,opt,name=stock,proto3" json:"stock,omitempty"`
-	// audit contains creation and modification metadata.
-	Audit         *v1.AuditInfo `protobuf:"bytes,6,opt,name=audit,proto3" json:"audit,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	PriceCents    int64                  `protobuf:"varint,4,opt,name=price_cents,json=priceCents,proto3" json:"price_cents,omitempty"`
+	Stock         int32                  `protobuf:"varint,5,opt,name=stock,proto3" json:"stock,omitempty"`
+	Audit         *v1.AuditInfo          `protobuf:"bytes,6,opt,name=audit,proto3" json:"audit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -117,17 +107,12 @@ func (x *Product) GetAudit() *v1.AuditInfo {
 	return nil
 }
 
-// CreateProductRequest carries the data needed to create a new product.
 type CreateProductRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// name is the display name of the product (required, max 255 chars).
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// description is the long-form description (optional, max 2000 chars).
-	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
-	// price_cents is the price in the smallest currency unit (required, min 0).
-	PriceCents int64 `protobuf:"varint,3,opt,name=price_cents,json=priceCents,proto3" json:"price_cents,omitempty"`
-	// stock is the initial inventory quantity (required, min 0).
-	Stock         int32 `protobuf:"varint,4,opt,name=stock,proto3" json:"stock,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	PriceCents    int64                  `protobuf:"varint,3,opt,name=price_cents,json=priceCents,proto3" json:"price_cents,omitempty"`
+	Stock         int32                  `protobuf:"varint,4,opt,name=stock,proto3" json:"stock,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -190,13 +175,10 @@ func (x *CreateProductRequest) GetStock() int32 {
 	return 0
 }
 
-// CreateProductResponse returns the newly created product.
 type CreateProductResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// base contains the operation status and any error details.
-	Base *v1.BaseResponse `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	// product is the newly created product.
-	Product       *Product `protobuf:"bytes,2,opt,name=product,proto3" json:"product,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *v1.BaseResponse       `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Product       *Product               `protobuf:"bytes,2,opt,name=product,proto3" json:"product,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -245,11 +227,9 @@ func (x *CreateProductResponse) GetProduct() *Product {
 	return nil
 }
 
-// GetProductRequest identifies the product to retrieve.
 type GetProductRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// id is the unique identifier of the product to retrieve (UUID v4).
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -291,13 +271,10 @@ func (x *GetProductRequest) GetId() string {
 	return ""
 }
 
-// GetProductResponse returns the requested product.
 type GetProductResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// base contains the operation status and any error details.
-	Base *v1.BaseResponse `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	// product is the requested product.
-	Product       *Product `protobuf:"bytes,2,opt,name=product,proto3" json:"product,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *v1.BaseResponse       `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Product       *Product               `protobuf:"bytes,2,opt,name=product,proto3" json:"product,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -346,19 +323,13 @@ func (x *GetProductResponse) GetProduct() *Product {
 	return nil
 }
 
-// UpdateProductRequest carries partial update data for an existing product.
-// Only fields specified in update_mask will be modified.
 type UpdateProductRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// id is the unique identifier of the product to update (required).
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// update_mask specifies which fields of `product` to update.
-	// If update_mask is empty, all fields in `product` will be updated.
-	// Field paths: "name", "description", "price_cents", "stock"
-	UpdateMask *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
-	// product contains the new field values. Only fields listed in
-	// update_mask are applied. Other fields are ignored.
-	Product       *Product `protobuf:"bytes,3,opt,name=product,proto3" json:"product,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Description   *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	PriceCents    *int64                 `protobuf:"varint,4,opt,name=price_cents,json=priceCents,proto3,oneof" json:"price_cents,omitempty"`
+	Stock         *int32                 `protobuf:"varint,5,opt,name=stock,proto3,oneof" json:"stock,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -400,27 +371,38 @@ func (x *UpdateProductRequest) GetId() string {
 	return ""
 }
 
-func (x *UpdateProductRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
-	if x != nil {
-		return x.UpdateMask
+func (x *UpdateProductRequest) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
-	return nil
+	return ""
 }
 
-func (x *UpdateProductRequest) GetProduct() *Product {
-	if x != nil {
-		return x.Product
+func (x *UpdateProductRequest) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
-	return nil
+	return ""
 }
 
-// UpdateProductResponse returns the product after the update.
+func (x *UpdateProductRequest) GetPriceCents() int64 {
+	if x != nil && x.PriceCents != nil {
+		return *x.PriceCents
+	}
+	return 0
+}
+
+func (x *UpdateProductRequest) GetStock() int32 {
+	if x != nil && x.Stock != nil {
+		return *x.Stock
+	}
+	return 0
+}
+
 type UpdateProductResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// base contains the operation status and any error details.
-	Base *v1.BaseResponse `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	// product is the product after the update has been applied.
-	Product       *Product `protobuf:"bytes,2,opt,name=product,proto3" json:"product,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *v1.BaseResponse       `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Product       *Product               `protobuf:"bytes,2,opt,name=product,proto3" json:"product,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -469,11 +451,9 @@ func (x *UpdateProductResponse) GetProduct() *Product {
 	return nil
 }
 
-// DeleteProductRequest identifies the product to delete.
 type DeleteProductRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// id is the unique identifier of the product to delete (UUID v4).
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -515,11 +495,9 @@ func (x *DeleteProductRequest) GetId() string {
 	return ""
 }
 
-// DeleteProductResponse confirms the deletion.
 type DeleteProductResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// base contains the operation status and any error details.
-	Base          *v1.BaseResponse `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *v1.BaseResponse       `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -561,11 +539,12 @@ func (x *DeleteProductResponse) GetBase() *v1.BaseResponse {
 	return nil
 }
 
-// ListProductsRequest carries pagination parameters for listing products.
 type ListProductsRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// pagination controls the page and page size.
-	Pagination    *v1.PaginationRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	SearchName    string                 `protobuf:"bytes,3,opt,name=search_name,json=searchName,proto3" json:"search_name,omitempty"`
+	MinPrice      *int64                 `protobuf:"varint,4,opt,name=min_price,json=minPrice,proto3,oneof" json:"min_price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -600,21 +579,38 @@ func (*ListProductsRequest) Descriptor() ([]byte, []int) {
 	return file_product_v1_product_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListProductsRequest) GetPagination() *v1.PaginationRequest {
+func (x *ListProductsRequest) GetPage() int32 {
 	if x != nil {
-		return x.Pagination
+		return x.Page
 	}
-	return nil
+	return 0
 }
 
-// ListProductsResponse returns a paginated list of products.
+func (x *ListProductsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListProductsRequest) GetSearchName() string {
+	if x != nil {
+		return x.SearchName
+	}
+	return ""
+}
+
+func (x *ListProductsRequest) GetMinPrice() int64 {
+	if x != nil && x.MinPrice != nil {
+		return *x.MinPrice
+	}
+	return 0
+}
+
 type ListProductsResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// base contains the operation status and any error details.
-	Base *v1.BaseResponse `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	// products is the list of products on the current page.
-	Products []*Product `protobuf:"bytes,2,rep,name=products,proto3" json:"products,omitempty"`
-	// pagination contains metadata about the total result set.
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *v1.BaseResponse       `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Products      []*Product             `protobuf:"bytes,2,rep,name=products,proto3" json:"products,omitempty"`
 	Pagination    *v1.PaginationResponse `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -676,7 +672,7 @@ var File_product_v1_product_proto protoreflect.FileDescriptor
 const file_product_v1_product_proto_rawDesc = "" +
 	"\n" +
 	"\x18product/v1/product.proto\x12\n" +
-	"product.v1\x1a\x16common/v1/common.proto\x1a\x1cgoogle/api/annotations.proto\x1a google/protobuf/field_mask.proto\"\xb2\x01\n" +
+	"product.v1\x1a\x16common/v1/common.proto\x1a\x1cgoogle/api/annotations.proto\"\xb2\x01\n" +
 	"\aProduct\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -698,23 +694,33 @@ const file_product_v1_product_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"p\n" +
 	"\x12GetProductResponse\x12+\n" +
 	"\x04base\x18\x01 \x01(\v2\x17.common.v1.BaseResponseR\x04base\x12-\n" +
-	"\aproduct\x18\x02 \x01(\v2\x13.product.v1.ProductR\aproduct\"\x92\x01\n" +
+	"\aproduct\x18\x02 \x01(\v2\x13.product.v1.ProductR\aproduct\"\xda\x01\n" +
 	"\x14UpdateProductRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12;\n" +
-	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
-	"updateMask\x12-\n" +
-	"\aproduct\x18\x03 \x01(\v2\x13.product.v1.ProductR\aproduct\"s\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x01R\vdescription\x88\x01\x01\x12$\n" +
+	"\vprice_cents\x18\x04 \x01(\x03H\x02R\n" +
+	"priceCents\x88\x01\x01\x12\x19\n" +
+	"\x05stock\x18\x05 \x01(\x05H\x03R\x05stock\x88\x01\x01B\a\n" +
+	"\x05_nameB\x0e\n" +
+	"\f_descriptionB\x0e\n" +
+	"\f_price_centsB\b\n" +
+	"\x06_stock\"s\n" +
 	"\x15UpdateProductResponse\x12+\n" +
 	"\x04base\x18\x01 \x01(\v2\x17.common.v1.BaseResponseR\x04base\x12-\n" +
 	"\aproduct\x18\x02 \x01(\v2\x13.product.v1.ProductR\aproduct\"&\n" +
 	"\x14DeleteProductRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"D\n" +
 	"\x15DeleteProductResponse\x12+\n" +
-	"\x04base\x18\x01 \x01(\v2\x17.common.v1.BaseResponseR\x04base\"S\n" +
-	"\x13ListProductsRequest\x12<\n" +
+	"\x04base\x18\x01 \x01(\v2\x17.common.v1.BaseResponseR\x04base\"\x97\x01\n" +
+	"\x13ListProductsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1f\n" +
+	"\vsearch_name\x18\x03 \x01(\tR\n" +
+	"searchName\x12 \n" +
+	"\tmin_price\x18\x04 \x01(\x03H\x00R\bminPrice\x88\x01\x01B\f\n" +
 	"\n" +
-	"pagination\x18\x01 \x01(\v2\x1c.common.v1.PaginationRequestR\n" +
-	"pagination\"\xb3\x01\n" +
+	"_min_price\"\xb3\x01\n" +
 	"\x14ListProductsResponse\x12+\n" +
 	"\x04base\x18\x01 \x01(\v2\x17.common.v1.BaseResponseR\x04base\x12/\n" +
 	"\bproducts\x18\x02 \x03(\v2\x13.product.v1.ProductR\bproducts\x12=\n" +
@@ -759,9 +765,7 @@ var file_product_v1_product_proto_goTypes = []any{
 	(*ListProductsResponse)(nil),  // 10: product.v1.ListProductsResponse
 	(*v1.AuditInfo)(nil),          // 11: common.v1.AuditInfo
 	(*v1.BaseResponse)(nil),       // 12: common.v1.BaseResponse
-	(*fieldmaskpb.FieldMask)(nil), // 13: google.protobuf.FieldMask
-	(*v1.PaginationRequest)(nil),  // 14: common.v1.PaginationRequest
-	(*v1.PaginationResponse)(nil), // 15: common.v1.PaginationResponse
+	(*v1.PaginationResponse)(nil), // 13: common.v1.PaginationResponse
 }
 var file_product_v1_product_proto_depIdxs = []int32{
 	11, // 0: product.v1.Product.audit:type_name -> common.v1.AuditInfo
@@ -769,30 +773,27 @@ var file_product_v1_product_proto_depIdxs = []int32{
 	0,  // 2: product.v1.CreateProductResponse.product:type_name -> product.v1.Product
 	12, // 3: product.v1.GetProductResponse.base:type_name -> common.v1.BaseResponse
 	0,  // 4: product.v1.GetProductResponse.product:type_name -> product.v1.Product
-	13, // 5: product.v1.UpdateProductRequest.update_mask:type_name -> google.protobuf.FieldMask
-	0,  // 6: product.v1.UpdateProductRequest.product:type_name -> product.v1.Product
-	12, // 7: product.v1.UpdateProductResponse.base:type_name -> common.v1.BaseResponse
-	0,  // 8: product.v1.UpdateProductResponse.product:type_name -> product.v1.Product
-	12, // 9: product.v1.DeleteProductResponse.base:type_name -> common.v1.BaseResponse
-	14, // 10: product.v1.ListProductsRequest.pagination:type_name -> common.v1.PaginationRequest
-	12, // 11: product.v1.ListProductsResponse.base:type_name -> common.v1.BaseResponse
-	0,  // 12: product.v1.ListProductsResponse.products:type_name -> product.v1.Product
-	15, // 13: product.v1.ListProductsResponse.pagination:type_name -> common.v1.PaginationResponse
-	1,  // 14: product.v1.ProductService.CreateProduct:input_type -> product.v1.CreateProductRequest
-	3,  // 15: product.v1.ProductService.GetProduct:input_type -> product.v1.GetProductRequest
-	5,  // 16: product.v1.ProductService.UpdateProduct:input_type -> product.v1.UpdateProductRequest
-	7,  // 17: product.v1.ProductService.DeleteProduct:input_type -> product.v1.DeleteProductRequest
-	9,  // 18: product.v1.ProductService.ListProducts:input_type -> product.v1.ListProductsRequest
-	2,  // 19: product.v1.ProductService.CreateProduct:output_type -> product.v1.CreateProductResponse
-	4,  // 20: product.v1.ProductService.GetProduct:output_type -> product.v1.GetProductResponse
-	6,  // 21: product.v1.ProductService.UpdateProduct:output_type -> product.v1.UpdateProductResponse
-	8,  // 22: product.v1.ProductService.DeleteProduct:output_type -> product.v1.DeleteProductResponse
-	10, // 23: product.v1.ProductService.ListProducts:output_type -> product.v1.ListProductsResponse
-	19, // [19:24] is the sub-list for method output_type
-	14, // [14:19] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	12, // 5: product.v1.UpdateProductResponse.base:type_name -> common.v1.BaseResponse
+	0,  // 6: product.v1.UpdateProductResponse.product:type_name -> product.v1.Product
+	12, // 7: product.v1.DeleteProductResponse.base:type_name -> common.v1.BaseResponse
+	12, // 8: product.v1.ListProductsResponse.base:type_name -> common.v1.BaseResponse
+	0,  // 9: product.v1.ListProductsResponse.products:type_name -> product.v1.Product
+	13, // 10: product.v1.ListProductsResponse.pagination:type_name -> common.v1.PaginationResponse
+	1,  // 11: product.v1.ProductService.CreateProduct:input_type -> product.v1.CreateProductRequest
+	3,  // 12: product.v1.ProductService.GetProduct:input_type -> product.v1.GetProductRequest
+	5,  // 13: product.v1.ProductService.UpdateProduct:input_type -> product.v1.UpdateProductRequest
+	7,  // 14: product.v1.ProductService.DeleteProduct:input_type -> product.v1.DeleteProductRequest
+	9,  // 15: product.v1.ProductService.ListProducts:input_type -> product.v1.ListProductsRequest
+	2,  // 16: product.v1.ProductService.CreateProduct:output_type -> product.v1.CreateProductResponse
+	4,  // 17: product.v1.ProductService.GetProduct:output_type -> product.v1.GetProductResponse
+	6,  // 18: product.v1.ProductService.UpdateProduct:output_type -> product.v1.UpdateProductResponse
+	8,  // 19: product.v1.ProductService.DeleteProduct:output_type -> product.v1.DeleteProductResponse
+	10, // 20: product.v1.ProductService.ListProducts:output_type -> product.v1.ListProductsResponse
+	16, // [16:21] is the sub-list for method output_type
+	11, // [11:16] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_product_v1_product_proto_init() }
@@ -800,6 +801,8 @@ func file_product_v1_product_proto_init() {
 	if File_product_v1_product_proto != nil {
 		return
 	}
+	file_product_v1_product_proto_msgTypes[5].OneofWrappers = []any{}
+	file_product_v1_product_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -29,20 +29,11 @@ const (
 // ProductServiceClient is the client API for ProductService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// ProductService exposes CRUD operations for the product catalog.
-// All endpoints follow REST conventions via gRPC-Gateway HTTP transcoding.
 type ProductServiceClient interface {
-	// CreateProduct creates a new product in the catalog.
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*CreateProductResponse, error)
-	// GetProduct retrieves a single product by its unique identifier.
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*GetProductResponse, error)
-	// UpdateProduct partially updates an existing product using FieldMask semantics.
-	// Only fields listed in update_mask are modified.
 	UpdateProduct(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*UpdateProductResponse, error)
-	// DeleteProduct removes a product from the catalog permanently.
 	DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error)
-	// ListProducts returns a paginated list of all products.
 	ListProducts(ctx context.Context, in *ListProductsRequest, opts ...grpc.CallOption) (*ListProductsResponse, error)
 }
 
@@ -107,20 +98,11 @@ func (c *productServiceClient) ListProducts(ctx context.Context, in *ListProduct
 // ProductServiceServer is the server API for ProductService service.
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility.
-//
-// ProductService exposes CRUD operations for the product catalog.
-// All endpoints follow REST conventions via gRPC-Gateway HTTP transcoding.
 type ProductServiceServer interface {
-	// CreateProduct creates a new product in the catalog.
 	CreateProduct(context.Context, *CreateProductRequest) (*CreateProductResponse, error)
-	// GetProduct retrieves a single product by its unique identifier.
 	GetProduct(context.Context, *GetProductRequest) (*GetProductResponse, error)
-	// UpdateProduct partially updates an existing product using FieldMask semantics.
-	// Only fields listed in update_mask are modified.
 	UpdateProduct(context.Context, *UpdateProductRequest) (*UpdateProductResponse, error)
-	// DeleteProduct removes a product from the catalog permanently.
 	DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error)
-	// ListProducts returns a paginated list of all products.
 	ListProducts(context.Context, *ListProductsRequest) (*ListProductsResponse, error)
 	mustEmbedUnimplementedProductServiceServer()
 }

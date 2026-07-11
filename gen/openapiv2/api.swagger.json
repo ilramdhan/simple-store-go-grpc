@@ -18,7 +18,6 @@
   "paths": {
     "/v1/products": {
       "get": {
-        "summary": "ListProducts returns a paginated list of all products.",
         "operationId": "ProductService_ListProducts",
         "responses": {
           "200": {
@@ -36,20 +35,31 @@
         },
         "parameters": [
           {
-            "name": "pagination.page",
-            "description": "page is the 1-indexed page number to fetch (minimum: 1).",
+            "name": "page",
             "in": "query",
             "required": false,
             "type": "integer",
             "format": "int32"
           },
           {
-            "name": "pagination.pageSize",
-            "description": "page_size is the maximum number of items per page (maximum: 100).",
+            "name": "pageSize",
             "in": "query",
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "searchName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "minPrice",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -57,7 +67,6 @@
         ]
       },
       "post": {
-        "summary": "CreateProduct creates a new product in the catalog.",
         "operationId": "ProductService_CreateProduct",
         "responses": {
           "200": {
@@ -76,7 +85,6 @@
         "parameters": [
           {
             "name": "body",
-            "description": "CreateProductRequest carries the data needed to create a new product.",
             "in": "body",
             "required": true,
             "schema": {
@@ -91,7 +99,6 @@
     },
     "/v1/products/{id}": {
       "get": {
-        "summary": "GetProduct retrieves a single product by its unique identifier.",
         "operationId": "ProductService_GetProduct",
         "responses": {
           "200": {
@@ -110,7 +117,6 @@
         "parameters": [
           {
             "name": "id",
-            "description": "id is the unique identifier of the product to retrieve (UUID v4).",
             "in": "path",
             "required": true,
             "type": "string"
@@ -121,7 +127,6 @@
         ]
       },
       "delete": {
-        "summary": "DeleteProduct removes a product from the catalog permanently.",
         "operationId": "ProductService_DeleteProduct",
         "responses": {
           "200": {
@@ -140,7 +145,6 @@
         "parameters": [
           {
             "name": "id",
-            "description": "id is the unique identifier of the product to delete (UUID v4).",
             "in": "path",
             "required": true,
             "type": "string"
@@ -151,7 +155,6 @@
         ]
       },
       "patch": {
-        "summary": "UpdateProduct partially updates an existing product using FieldMask semantics.\nOnly fields listed in update_mask are modified.",
         "operationId": "ProductService_UpdateProduct",
         "responses": {
           "200": {
@@ -170,7 +173,6 @@
         "parameters": [
           {
             "name": "id",
-            "description": "id is the unique identifier of the product to update (required).",
             "in": "path",
             "required": true,
             "type": "string"
@@ -194,16 +196,21 @@
     "ProductServiceUpdateProductBody": {
       "type": "object",
       "properties": {
-        "updateMask": {
-          "type": "string",
-          "title": "update_mask specifies which fields of `product` to update.\nIf update_mask is empty, all fields in `product` will be updated.\nField paths: \"name\", \"description\", \"price_cents\", \"stock\""
+        "name": {
+          "type": "string"
         },
-        "product": {
-          "$ref": "#/definitions/v1Product",
-          "description": "product contains the new field values. Only fields listed in\nupdate_mask are applied. Other fields are ignored."
+        "description": {
+          "type": "string"
+        },
+        "priceCents": {
+          "type": "string",
+          "format": "int64"
+        },
+        "stock": {
+          "type": "integer",
+          "format": "int32"
         }
-      },
-      "description": "UpdateProductRequest carries partial update data for an existing product.\nOnly fields specified in update_mask will be modified."
+      }
     },
     "protobufAny": {
       "type": "object",
@@ -288,101 +295,68 @@
       "type": "object",
       "properties": {
         "name": {
-          "type": "string",
-          "description": "name is the display name of the product (required, max 255 chars)."
+          "type": "string"
         },
         "description": {
-          "type": "string",
-          "description": "description is the long-form description (optional, max 2000 chars)."
+          "type": "string"
         },
         "priceCents": {
           "type": "string",
-          "format": "int64",
-          "description": "price_cents is the price in the smallest currency unit (required, min 0)."
+          "format": "int64"
         },
         "stock": {
           "type": "integer",
-          "format": "int32",
-          "description": "stock is the initial inventory quantity (required, min 0)."
+          "format": "int32"
         }
-      },
-      "description": "CreateProductRequest carries the data needed to create a new product."
+      }
     },
     "v1CreateProductResponse": {
       "type": "object",
       "properties": {
         "base": {
-          "$ref": "#/definitions/v1BaseResponse",
-          "description": "base contains the operation status and any error details."
+          "$ref": "#/definitions/v1BaseResponse"
         },
         "product": {
-          "$ref": "#/definitions/v1Product",
-          "description": "product is the newly created product."
+          "$ref": "#/definitions/v1Product"
         }
-      },
-      "description": "CreateProductResponse returns the newly created product."
+      }
     },
     "v1DeleteProductResponse": {
       "type": "object",
       "properties": {
         "base": {
-          "$ref": "#/definitions/v1BaseResponse",
-          "description": "base contains the operation status and any error details."
+          "$ref": "#/definitions/v1BaseResponse"
         }
-      },
-      "description": "DeleteProductResponse confirms the deletion."
+      }
     },
     "v1GetProductResponse": {
       "type": "object",
       "properties": {
         "base": {
-          "$ref": "#/definitions/v1BaseResponse",
-          "description": "base contains the operation status and any error details."
+          "$ref": "#/definitions/v1BaseResponse"
         },
         "product": {
-          "$ref": "#/definitions/v1Product",
-          "description": "product is the requested product."
+          "$ref": "#/definitions/v1Product"
         }
-      },
-      "description": "GetProductResponse returns the requested product."
+      }
     },
     "v1ListProductsResponse": {
       "type": "object",
       "properties": {
         "base": {
-          "$ref": "#/definitions/v1BaseResponse",
-          "description": "base contains the operation status and any error details."
+          "$ref": "#/definitions/v1BaseResponse"
         },
         "products": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1Product"
-          },
-          "description": "products is the list of products on the current page."
+          }
         },
         "pagination": {
-          "$ref": "#/definitions/v1PaginationResponse",
-          "description": "pagination contains metadata about the total result set."
+          "$ref": "#/definitions/v1PaginationResponse"
         }
-      },
-      "description": "ListProductsResponse returns a paginated list of products."
-    },
-    "v1PaginationRequest": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "type": "integer",
-          "format": "int32",
-          "description": "page is the 1-indexed page number to fetch (minimum: 1)."
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32",
-          "description": "page_size is the maximum number of items per page (maximum: 100)."
-        }
-      },
-      "description": "PaginationRequest carries cursor-based pagination parameters."
+      }
     },
     "v1PaginationResponse": {
       "type": "object",
@@ -414,47 +388,37 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "description": "id is the unique identifier of the product (UUID v4)."
+          "type": "string"
         },
         "name": {
-          "type": "string",
-          "description": "name is the display name of the product."
+          "type": "string"
         },
         "description": {
-          "type": "string",
-          "description": "description is the long-form description of the product."
+          "type": "string"
         },
         "priceCents": {
           "type": "string",
-          "format": "int64",
-          "title": "price_cents is the product price in the smallest currency unit (e.g. cents for USD).\nUsing integer avoids floating-point precision issues with monetary values.\nExample: 1999 = $19.99 USD"
+          "format": "int64"
         },
         "stock": {
           "type": "integer",
-          "format": "int32",
-          "description": "stock is the current available quantity in inventory."
+          "format": "int32"
         },
         "audit": {
-          "$ref": "#/definitions/v1AuditInfo",
-          "description": "audit contains creation and modification metadata."
+          "$ref": "#/definitions/v1AuditInfo"
         }
-      },
-      "description": "Product represents a single product entity in the catalog."
+      }
     },
     "v1UpdateProductResponse": {
       "type": "object",
       "properties": {
         "base": {
-          "$ref": "#/definitions/v1BaseResponse",
-          "description": "base contains the operation status and any error details."
+          "$ref": "#/definitions/v1BaseResponse"
         },
         "product": {
-          "$ref": "#/definitions/v1Product",
-          "description": "product is the product after the update has been applied."
+          "$ref": "#/definitions/v1Product"
         }
-      },
-      "description": "UpdateProductResponse returns the product after the update."
+      }
     },
     "v1ValidationError": {
       "type": "object",
