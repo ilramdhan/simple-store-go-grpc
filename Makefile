@@ -66,7 +66,15 @@ migration:
 	@echo "\033[32mMembuat file migrasi '$(name)' untuk service '$(svc)'...\033[0m"
 	migrate create -ext sql -dir services/$(svc)/internal/repository/postgres/migrations -format "20060102150405" $(name)
 
-# ─── Help ─────────────────────────────────────────────────────────────────────
+# ─── Help & Infra ─────────────────────────────────────────────────────────────
+
+## infra-up: Start all local infrastructure (Postgres, Redis, Minio, Jaeger) in background
+infra-up:
+	docker compose up -d
+
+## infra-down: Stop and remove all local infrastructure containers
+infra-down:
+	docker compose down
 
 ## help: Print this help message
 help:

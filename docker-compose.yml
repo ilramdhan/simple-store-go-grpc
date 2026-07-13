@@ -1,0 +1,58 @@
+services:
+  # Database untuk Product & Order Service
+  postgres:
+    image: postgres:16-alpine
+    container_name: store_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: simplestore
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d simplestore"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # In-memory store untuk Caching dan Rate Limiting
+  redis:
+    image: redis:7-alpine
+    container_name: store_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    command: redis-server --appendonly yes
+
+  # S3 Compatible Object Storage untuk upload gambar produk
+  minio:
+    image: minio/minio:latest
+    container_name: store_minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000" # API Port
+      - "9001:9001" # Console/UI Port
+    volumes:
+      - miniodata:/data
+
+  # Tambahan Opsional: Grafana Jaeger (Traces dari OpenTelemetry)
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: store_jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686" # Web UI
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:
