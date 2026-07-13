@@ -20,6 +20,11 @@ import (
 	"github.com/ilramdhan/simple-store-go-grpc/services/product-service/internal/logger"
 	"github.com/ilramdhan/simple-store-go-grpc/services/product-service/internal/repository/postgres"
 	"github.com/ilramdhan/simple-store-go-grpc/services/product-service/internal/usecase"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"google.golang.org/grpc/health"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+
+	"github.com/ilramdhan/simple-store-go-grpc/services/product-service/internal/interceptor"
 )
 
 type App struct {
@@ -48,9 +53,35 @@ func NewApp(ctx context.Context, cfg *config.Config) (*App, error) {
 	uc := usecase.NewProductUsecase(repo)
 	handler := grpchandler.NewHandler(uc)
 
-	// 3. Setup gRPC Server (Interceptors akan ditambahkan di Part 3)
-	grpcServer := grpc.NewServer()
+	// 3. Setup gRPC Server with Interceptors (Phase 13, 16)
+	grpcServer := grpc.NewServer(
+		grpc.StatsHandler(otelgrpc.NewServerHandler()),
+		grpc.ChainUnaryInterceptor(
+			interceptor.UnaryRecovery(),
+			interceptor.UnaryRequestID(),
+			interceptor.UnaryLogging(),
+			interceptor.UnaryAuth(cfg.App.JWTSecret), // Phase 14: Authentication
+		),
+	)
 	productv1.RegisterProductServiceServer(grpcServer, handler)
+
+	// Phase 15: Health Checks & Readiness
+	healthServer := health.NewServer()
+	healthServer.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+	healthpb.RegisterHealthServer(grpcServer, healthServer)
+	
+	// Readiness probe goroutine
+	go func() {
+		for {
+			time.Sleep(5 * time.Second)
+			if err := dbPool.Ping(context.Background()); err != nil {
+				healthServer.SetServingStatus("", healthpb.HealthCheckResponse_NOT_SERVING)
+				logger.FromContext(context.Background()).Warn("Database ping failed, health status set to NOT_SERVING", "error", err)
+			} else {
+				healthServer.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+			}
+		}
+	}()
 
 	// 4. Setup gRPC-Gateway
 	mux := runtime.NewServeMux()

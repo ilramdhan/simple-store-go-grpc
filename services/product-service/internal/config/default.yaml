@@ -1,6 +1,7 @@
 app:
   env: "development"
   name: "product-service"
+  jwt_secret: "supersecretkey"
 
 server:
   grpc_port: 50051

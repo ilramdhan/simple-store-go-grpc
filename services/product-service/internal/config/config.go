@@ -23,8 +23,9 @@ type Config struct {
 }
 
 type AppConfig struct {
-	Env  string `koanf:"env" validate:"required,oneof=development staging production"`
-	Name string `koanf:"name" validate:"required"`
+	Env       string `koanf:"env" validate:"required,oneof=development staging production"`
+	Name      string `koanf:"name" validate:"required"`
+	JWTSecret string `koanf:"jwt_secret" validate:"required"`
 }
 
 type ServerConfig struct {
